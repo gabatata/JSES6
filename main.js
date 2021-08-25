@@ -72,3 +72,63 @@ var obj = {
 var {nome} = obj;
 console.log(nome);
 
+//Symbols - simbolos tem id unico
+
+const uniqueId = Symbol('oi');
+
+console.log(uniqueId)
+
+//well known symbols
+
+Symbol.iterator
+Symbol.split
+Symbol.toStringTag
+
+const arr = [1,2,3,4];
+const str = 'Gabriel'
+const it= arr[Symbol.iterator]();
+//forma antiga
+while (true) {
+    let { value , done} = it.next();
+
+    if (done){ break;}
+
+
+console.log(value);
+}
+//formas mais simples
+for (let value of arr){
+    console.log(value);
+}
+
+const obj = {
+    values: [1,2,3,4],
+    [Symbol.iterator](){
+let i = 0;
+return {
+    next: () => {
+        i++;
+        return {
+            value: this.values[i - 1],
+            done: i > this.values.length
+        };
+    }
+};
+    }
+};
+
+const it = obj[Symbol.iterator]();
+console.log("teste 1:")
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+
+for (let value of obj) {
+    console.log("teste 2: " + value);
+}
+
+const arr2 = [...obj];
+
+console.log("teste 3: " + arr2);
+
