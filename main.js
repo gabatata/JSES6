@@ -132,3 +132,170 @@ const arr2 = [...obj];
 
 console.log("teste 3: " + arr2);
 
+// generators - controla o fluxo da função
+
+function* hello() {
+    console.log ('hello');
+    yield 1;
+    console.log ('from');
+    yield 2;
+    console.log ('function');
+   
+}
+const it = hello();
+
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+
+
+function* naturalNumbers() {
+    let number = 0;
+    while (true) {
+        yield number;
+        number++;
+    }
+}
+
+const it = naturalNumbers();
+
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+
+
+const obj = {
+    values: [1,2,3,4],
+    *[Symbol.iterator](){
+for (var i = 0; i < this.values.length; i++){
+    yield this.values[i];
+}
+        }
+    }
+for (let value of obj) {
+    console.log(value);
+}
+
+//Promisses e fetchs
+const myPromisse = new Promise((resoolved, reject) =>{
+    //
+});
+//Callbacks para tarefas sincronas após algo ser executado
+const façaIssoPromisse = () =>
+new Promise((resolved, reject) =>{
+    
+            setTimeout(function(){
+                // fez algo
+            resolved('First data');
+        }, 1000);
+        });
+    
+        const façaOutraPromisse = () => 
+        new Promise((resolved, reject) =>{
+            setTimeout(function(){
+                // fez algo
+            resolved('Second data');
+        }, 1000);
+        });
+
+        façaIssoPromisse()
+        .then(data => {console.log(data);
+             return façaOutraPromisse();
+            })
+        .then(data2 => console.log(data2))
+        .catch(error => console.log('ops', error));
+
+        // outra forma
+        Promise.all([façaIssoPromisse(), façaOutraPromisse()])
+        .then(data => {
+console.log(data);
+        })
+        //#STATUS: Pending - está em execução
+        //Fulfilled - terminou de executar
+        //Rejected - aconteceu algum erro
+        
+//forma antiga
+function façaIsso(callback) {
+    setTimeout(function(){
+        //fez algo
+        callback('First data');
+    }, 1000);
+    }
+
+    function façaOutraCoisa(callback) {
+        setTimeout(function(){
+            //fez algo
+            callback('Second data');
+        }, 1000);
+        }
+
+        function fazTudo(){
+            try{
+            façaIsso(function(data){
+                var processedData = data.split('');
+                try{
+                façaOutraCoisa(function(data2){
+                    var processedData2 = data2.split('');
+
+                    setTimeout(function(){
+                        console.log(processedData, processedData2);
+                    }, 1000);
+                    });
+                } catch(err){
+                    //handle error
+                }
+                });
+            } catch(err){
+                // handle error
+            }
+                   }
+                   fazTudo();
+
+//Fetch
+
+fetch('http://localhost:8080/data.json').then(responseStream => {
+    if (responseStream.status === 200){
+        return responseStream.json();
+    } else {
+        throw new Error('Erro de pedido');
+    }
+}).then(data => {
+    console.log(data);
+}).catch(err => {
+    console.log('ERROR: ', err);
+});
+
+//ES7 - Async - transforma função em uma promisse/ Await
+
+const asyncTimer = () => new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve(12345);
+    }, 1000);
+});
+
+const simpleFunc = async () => {
+    const data = await asyncTimer();
+    const dataJSON = await fetch('/data.json').then(resStream =>
+        resStream.json())
+    return data;
+};
+
+
+simpleFunc().then(data => {
+console.log(data);
+}).catch(err => {
+    console.log(err);
+});
+
+//EventEmitter - exclusivo do node
+
+const EventEmitter = require('events');
+
+const emitter = new EventEmitter();
+
+emitter.on('User logged', data => {
+    console.log(data);
+});
+
+emitter.emit('User logged', { user: 'Gabriel Santos'});
